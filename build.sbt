@@ -3,7 +3,7 @@ organization := "com.peachofpersia"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaAppPackaging)
 
 scalaVersion := "2.12.3"
 
