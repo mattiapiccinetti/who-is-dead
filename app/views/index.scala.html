@@ -1,0 +1,10 @@
+@(name: String)
+
+@defining(name + " is dead") { text =>
+  @main(s"$text") {
+    <div class="wrapper">
+      <p>@text</p>
+    </div>
+  }
+}
+
