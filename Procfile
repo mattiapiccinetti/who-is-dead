@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/isdead
+web: target/universal/stage/bin/isdead -Dhttp.port=${PORT}
