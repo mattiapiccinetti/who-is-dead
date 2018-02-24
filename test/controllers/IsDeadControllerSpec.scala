@@ -2,69 +2,110 @@ package controllers
 
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
+import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test._
+
+import scala.concurrent.Future
 
 
 class IsDeadControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
-  "IsDeadController GET /" should {
+  def assertThat(
+    result: Future[Result],
+    status: Int,
+    contentType: Option[String],
+    includedContent: String): Unit = {
+      Helpers.status(result) mustBe status
+      Helpers.contentType(result) mustBe contentType
+      Helpers.contentAsString(result) must include(includedContent)
+  }
+
+  "IsDeadController GET / for text/html content type" should {
+
+    val fakeRequest = FakeRequest(GET, "/").withHeaders("Accept" -> "text/html")
 
     "render the index page from a new instance of controller" in {
-      val controller = new IsDeadController(stubControllerComponents())
-      val home = controller.index().apply(FakeRequest(GET, "/"))
-
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("___ is dead")
+      assertThat(
+        result = new IsDeadController(stubControllerComponents()).index().apply(fakeRequest),
+        status = OK,
+        contentType = Some("text/html"),
+        includedContent = "___ is dead")
     }
 
     "render the index page from the application" in {
-      val controller = inject[IsDeadController]
-      val home = controller.index().apply(FakeRequest(GET, "/"))
-
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("___ is dead")
+      assertThat(
+        result = inject[IsDeadController].index().apply(fakeRequest),
+        status = OK,
+        contentType = Some("text/html"),
+        includedContent = "___ is dead")
     }
 
     "render the index page from the router" in {
-      val request = FakeRequest(GET, "/")
-      val home = route(app, request).get
-
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("___ is dead")
+      assertThat(
+        result = route(app, fakeRequest).get,
+        status = OK,
+        contentType = Some("text/html"),
+        includedContent = "___ is dead")
     }
   }
 
-  "IsDeadController GET /foo" should {
+  "IsDeadController GET /foo for text/html content type" should {
+
+    val fakeRequest = FakeRequest(GET, "/foo").withHeaders("Accept" -> "text/html")
 
     "render the index page from a new instance of controller" in {
-      val controller = new IsDeadController(stubControllerComponents())
-      val home = controller.isDead("foo").apply(FakeRequest(GET, "/foo"))
+      assertThat(
+        result = new IsDeadController(stubControllerComponents()).isDead("foo").apply(fakeRequest),
+        status = OK,
+        contentType = Some("text/html"),
+        includedContent = "foo is dead")
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("foo is dead")
     }
 
     "render the index page from the application" in {
-      val controller = inject[IsDeadController]
-      val home = controller.isDead("foo").apply(FakeRequest(GET, "/foo"))
-
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("foo is dead")
+      assertThat(
+        result = inject[IsDeadController].isDead("foo").apply(fakeRequest),
+        status = OK,
+        contentType = Some("text/html"),
+        includedContent = "foo is dead")
     }
 
     "render the index page from the router" in {
-      val request = FakeRequest(GET, "/foo")
-      val home = route(app, request).get
+      assertThat(
+        result = route(app, fakeRequest).get,
+        status = OK,
+        contentType = Some("text/html"),
+        includedContent = "foo is dead")
+    }
+  }
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("foo is dead")
+  "IsDeadController GET /foo for application/json content type" should {
+
+    val fakeRequest = FakeRequest(GET, "/foo").withHeaders("Accept" -> "application/json")
+
+    "render the index page from a new instance of controller" in {
+      assertThat(
+        result = new IsDeadController(stubControllerComponents()).isDead("foo").apply(fakeRequest),
+        status = OK,
+        contentType = Some("application/json"),
+        includedContent = "foo is dead")
+    }
+
+    "render the index page from the application" in {
+      assertThat(
+        result = inject[IsDeadController].isDead("foo").apply(fakeRequest),
+        status = OK,
+        contentType = Some("application/json"),
+        includedContent = "foo is dead")
+    }
+
+    "render the index page from the router" in {
+      assertThat(
+        result = route(app, fakeRequest).get,
+        status = OK,
+        contentType = Some("application/json"),
+        includedContent = "foo is dead")
     }
   }
 }
