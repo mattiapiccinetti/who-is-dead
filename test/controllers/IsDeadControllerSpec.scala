@@ -11,14 +11,12 @@ import scala.concurrent.Future
 
 class IsDeadControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
-  def assertThat(
-    result: Future[Result],
-    status: Int,
-    contentType: Option[String],
-    includedContent: String): Unit = {
-      Helpers.status(result) mustBe status
-      Helpers.contentType(result) mustBe contentType
-      Helpers.contentAsString(result) must include(includedContent)
+  def assertThat(result: Future[Result])
+                (status: Int, contentType: Option[String], includedContent: String): Unit = {
+
+    Helpers.status(result) mustBe status
+    Helpers.contentType(result) mustBe contentType
+    Helpers.contentAsString(result) must include(includedContent)
   }
 
   "IsDeadController GET / for text/html content type" should {
@@ -26,26 +24,61 @@ class IsDeadControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecti
     val fakeRequest = FakeRequest(GET, "/").withHeaders("Accept" -> "text/html")
 
     "render the index page from a new instance of controller" in {
-      assertThat(
-        result = new IsDeadController(stubControllerComponents()).index().apply(fakeRequest),
+      val actual = new IsDeadController(stubControllerComponents()).index().apply(fakeRequest)
+
+      assertThat(actual)(
         status = OK,
         contentType = Some("text/html"),
         includedContent = "___ is dead")
     }
 
     "render the index page from the application" in {
-      assertThat(
-        result = inject[IsDeadController].index().apply(fakeRequest),
+      val actual = inject[IsDeadController].index().apply(fakeRequest)
+
+      assertThat(actual)(
         status = OK,
         contentType = Some("text/html"),
         includedContent = "___ is dead")
     }
 
     "render the index page from the router" in {
-      assertThat(
-        result = route(app, fakeRequest).get,
+      val actual = route(app, fakeRequest).get
+
+      assertThat(actual)(
         status = OK,
         contentType = Some("text/html"),
+        includedContent = "___ is dead")
+    }
+  }
+
+  "IsDeadController GET / for application/json content type" should {
+
+    val fakeRequest = FakeRequest(GET, "/").withHeaders("Accept" -> "application/json")
+
+    "render the index page from a new instance of controller" in {
+      val actual = new IsDeadController(stubControllerComponents()).index().apply(fakeRequest)
+
+      assertThat(actual)(
+        status = OK,
+        contentType = Some("application/json"),
+        includedContent = "___ is dead")
+    }
+
+    "render the index page from the application" in {
+      val actual = inject[IsDeadController].index().apply(fakeRequest)
+
+      assertThat(actual)(
+        status = OK,
+        contentType = Some("application/json"),
+        includedContent = "___ is dead")
+    }
+
+    "render the index page from the router" in {
+      val actual = route(app, fakeRequest).get
+
+      assertThat(actual)(
+        status = OK,
+        contentType = Some("application/json"),
         includedContent = "___ is dead")
     }
   }
@@ -55,25 +88,27 @@ class IsDeadControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecti
     val fakeRequest = FakeRequest(GET, "/foo").withHeaders("Accept" -> "text/html")
 
     "render the index page from a new instance of controller" in {
-      assertThat(
-        result = new IsDeadController(stubControllerComponents()).isDead("foo").apply(fakeRequest),
+      val actual = new IsDeadController(stubControllerComponents()).isDead("foo").apply(fakeRequest)
+
+      assertThat(actual)(
         status = OK,
         contentType = Some("text/html"),
         includedContent = "foo is dead")
-
     }
 
     "render the index page from the application" in {
-      assertThat(
-        result = inject[IsDeadController].isDead("foo").apply(fakeRequest),
+      val actual = inject[IsDeadController].isDead("foo").apply(fakeRequest)
+
+      assertThat(actual)(
         status = OK,
         contentType = Some("text/html"),
         includedContent = "foo is dead")
     }
 
     "render the index page from the router" in {
-      assertThat(
-        result = route(app, fakeRequest).get,
+      val actual = route(app, fakeRequest).get
+
+      assertThat(actual)(
         status = OK,
         contentType = Some("text/html"),
         includedContent = "foo is dead")
@@ -85,27 +120,31 @@ class IsDeadControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecti
     val fakeRequest = FakeRequest(GET, "/foo").withHeaders("Accept" -> "application/json")
 
     "render the index page from a new instance of controller" in {
-      assertThat(
-        result = new IsDeadController(stubControllerComponents()).isDead("foo").apply(fakeRequest),
+      val actual = new IsDeadController(stubControllerComponents()).isDead("foo").apply(fakeRequest)
+
+      assertThat(actual)(
         status = OK,
         contentType = Some("application/json"),
         includedContent = "foo is dead")
     }
 
     "render the index page from the application" in {
-      assertThat(
-        result = inject[IsDeadController].isDead("foo").apply(fakeRequest),
+      val actual = inject[IsDeadController].isDead("foo").apply(fakeRequest)
+
+      assertThat(actual)(
         status = OK,
         contentType = Some("application/json"),
         includedContent = "foo is dead")
     }
 
     "render the index page from the router" in {
-      assertThat(
-        result = route(app, fakeRequest).get,
+      val actual = route(app, fakeRequest).get
+
+      assertThat(actual)(
         status = OK,
         contentType = Some("application/json"),
         includedContent = "foo is dead")
     }
   }
 }
+
