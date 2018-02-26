@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/mattiapiccinetti/is-dead.svg?branch=master)](https://travis-ci.org/mattiapiccinetti/is-dead)
 
-# ___ is dead
+# Who is dead?
 Be a buzzkill!
 
 
@@ -11,10 +11,10 @@ Thanks to [Stefano](http://github.com/stesua) for the idea!
 Just put in the url the word you want and let the app drops the joy for you :grin:
 
 ## See it in action
-Go to https://isdead.herokuapp.com/scala
+Go to https://whoisdead.herokuapp.com/scala
 
 ## Or if you like JSON
 
 ```
-curl -H Accept:application/json https://isdead.herokuapp.com/scala
+curl -H Accept:application/json https://whoisdead.herokuapp.com/scala
 ```

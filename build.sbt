@@ -1,7 +1,7 @@
-name := """isDead"""
+name := """who-is-dead"""
 organization := "com.peachofpersia"
 
-version := "1.0-SNAPSHOT"
+version := "1.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaAppPackaging)
 
